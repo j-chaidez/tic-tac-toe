@@ -10,8 +10,8 @@ var app = (function() {
 	["3", "6", "9"]];
 	
 	// create the player objects
-	var playerOne = new player(true, "./img/x.svg", "X", false, "blue");
-	var playerTwo = new player(false, "./img/o.svg", "O", false, "orange");
+	var playerOne = new player(true, "./img/x.svg", "X", false);
+	var playerTwo = new player(false, "./img/o.svg", "O", false);
 	var currentPlayer = playerOne;
 	// this is used to flag the initial state of the app
 	var initial = true;
@@ -31,7 +31,7 @@ var app = (function() {
 		
 		startFile: "<div class='screen screen-start' id='start'>"
 				 + "<header><h1>Tic Tac Toe</h1>"
-				 + "<input type='text' class='name' placeholder='Your name'></input>"
+				 + "<input type='text' class='name' placeholder='Player 1 Name'></input>"
 				 + "<a href='#' class='button'>Start game</a>"
 				 + "</header></div>",
 	    
@@ -44,7 +44,7 @@ var app = (function() {
 	}
 	
 	// create a constructor that will handle all player objects
-	function player(turn, symbolPicture, symbolLetter, computer, background) {
+	function player(turn, symbolPicture, symbolLetter, computer) {
 		// turn tells whether or not it is the players turn
 		this.turn = turn;
 		// symbolPicture is the file path to the appropriate svg
@@ -53,8 +53,6 @@ var app = (function() {
 		this.symbolLetter = symbolLetter;
 		// when this is set to true, the player is a computer player
 		this.computer = computer;
-		// load the background color
-		this.background = background;
 	}
 	
 	return {
@@ -201,7 +199,9 @@ var app = (function() {
 		},
 		
 		loadBody: function(bodyHTML) {
-			var playerName = document.getElementsByClassName("name")[0];
+			if (initial === true) {
+				playerName = document.getElementsByClassName("name")[0];
+			}
 			if (playerName.value !== "") {
 				this.resetArrays();
 				body.innerHTML = bodyHTML;
@@ -231,6 +231,7 @@ var app = (function() {
 		},
 		
 		resetBoard: function() {
+			filled = 0;
 			playerOne.turn = true;
 			playerTwo.turn = false;
 			currentPlayer = playerOne;
