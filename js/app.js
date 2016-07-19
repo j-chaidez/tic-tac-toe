@@ -27,7 +27,7 @@ var app = (function() {
 	var playerTwo;
 	
 	// declare the variable that is used to check if all boxes have been filled
-	var filled = 0;
+	var filled = 1;
 	
 	// declare the variable that contains all of the boxes;
 	var boxes = document.getElementsByClassName("box");
@@ -163,10 +163,10 @@ var app = (function() {
 		
 		executeComputerMove: function(last) {
 			var availableMove = app.getAvailableMoves(last);
+			console.log(availableMove);
 			try {
-				var randomArray = Math.floor(Math.random() * availableMove.length);
-				var randomElement = Math.floor(Math.random() * availableMove[randomArray].length);
-				document.getElementById(availableMove[randomArray][randomElement]).click();
+				var randomElement = Math.floor(Math.random() * availableMove[0].length);
+				document.getElementById(availableMove[0][randomElement]).click();
 			} catch (err) {};
 		},
 		
@@ -175,7 +175,7 @@ var app = (function() {
 			var lowest = [1, 1, 1]
 			for (var j = 0; j < winningCombinationsOne.length; j++) {
 				console.log(winningCombinationsOne[j])
-				if (winningCombinationsOne[j].length <= lowest.length && availableMoves[j].length > 0 && lastIndex !== j) {
+				if (winningCombinationsOne[j].length < lowest.length && availableMoves[j].length > 0) {
 					for (var i = 0; i < winningCombinationsTwo[j].length; i++) {
 						if (winningCombinationsTwo[j][i] === last) {
 							console.log(availableMoves[j] + " is selected");
