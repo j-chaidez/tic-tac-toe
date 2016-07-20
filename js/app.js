@@ -164,21 +164,31 @@ var app = (function() {
 		executeComputerMove: function(last) {
 			var availableMove = app.getAvailableMoves(last);
 			console.log(availableMove);
+			var randomArray = Math.floor(Math.random() * availableMove.length);
+			console.log(randomArray);
 			try {
-				var randomElement = Math.floor(Math.random() * availableMove[0].length);
-				document.getElementById(availableMove[0][randomElement]).click();
-			} catch (err) {};
+				var randomArray = Math.floor(Math.random() * availableMove.length);
+				var randomElement = Math.floor(Math.random() * availableMove[randomArray].length);
+				var element = availableMove[randomArray][randomElement]
+				console.log(element);
+				document.getElementById(availableMove[randomArray][randomElement]).click();
+			} catch (err) {
+				console.log(err);
+			};
 		},
 		
 		getAvailableMoves: function(last) {
 			var n = [];
-			var lowest = [1, 1, 1]
+			var lowest = [1, 1, 1];
 			for (var j = 0; j < winningCombinationsOne.length; j++) {
-				console.log(winningCombinationsOne[j])
-				if (winningCombinationsOne[j].length < lowest.length && availableMoves[j].length > 0) {
+				if (winningCombinationsOne[j].length <= lowest.length && availableMoves[j].length > 0) {
 					for (var i = 0; i < winningCombinationsTwo[j].length; i++) {
+						console.log(winningCombinationsOne[j] +" is combo 1");
+						if (winningCombinationsOne[j].length === 1) {
+							lowest = availableMoves[j];
+							break;
+						}
 						if (winningCombinationsTwo[j][i] === last) {
-							console.log(availableMoves[j] + " is selected");
 							lowest = availableMoves[j];
 							n.push(availableMoves[j]);
 							lastIndex = j;
