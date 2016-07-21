@@ -165,12 +165,9 @@ var app = (function() {
 			var availableMove = app.getAvailableMoves(last);
 			console.log(availableMove);
 			var randomArray = Math.floor(Math.random() * availableMove.length);
-			console.log(randomArray);
+			var randomElement = Math.floor(Math.random() * availableMove[randomArray].length);
 			try {
-				var randomArray = Math.floor(Math.random() * availableMove.length);
-				var randomElement = Math.floor(Math.random() * availableMove[randomArray].length);
 				var element = availableMove[randomArray][randomElement]
-				console.log(element);
 				document.getElementById(availableMove[randomArray][randomElement]).click();
 			} catch (err) {
 				console.log(err);
@@ -181,22 +178,20 @@ var app = (function() {
 			var n = [];
 			var lowest = [1, 1, 1];
 			for (var j = 0; j < winningCombinationsOne.length; j++) {
-				if (winningCombinationsOne[j].length <= lowest.length && availableMoves[j].length > 0) {
+				if (winningCombinationsTwo[j].length === 1) {
+					return winningCombinationsTwo[j];
+				}
+				if (winningCombinationsOne[j].length < lowest.length && availableMoves[j].length > 0) {
 					for (var i = 0; i < winningCombinationsTwo[j].length; i++) {
-						console.log(winningCombinationsOne[j] +" is combo 1");
 						if (winningCombinationsOne[j].length === 1) {
-							lowest = availableMoves[j];
-							break;
-						}
-						if (winningCombinationsTwo[j][i] === last) {
-							lowest = availableMoves[j];
+							return availableMoves[j];
+						} else {
 							n.push(availableMoves[j]);
-							lastIndex = j;
 						}
 					}
 				}
 			}
-			return lowest;
+			return n;
 		},
 		
 		popMove: function(id) {
@@ -237,12 +232,29 @@ var app = (function() {
 			for (var i = 0; i < targetArray.length; i++) {
 				if (targetArray[i].length <= 0) {
 					body.innerHTML = htmlSnippets.gameOver;
-					document.getElementsByClassName("message")[0].innerHTML = current.name + " wins the game!";
-					this.resetGame();
+					document.getElementsByClassName("message")[0].innerHTML = current.name + " wins!";
 					document.getElementsByClassName("button")[0].addEventListener("click", app.loadStart, false);
+					if (current.symbolPicture[6] === 'x') {
+						var screen = document.getElementsByClassName("screen")[0];
+						var message = document.getElementsByClassName("message")[0];
+						screen.style.backgroundColor = "#3688C3";
+						screen.style.backgroundImage = "url(img/" + current.symbolPicture[6] + "_win.svg";
+						screen.style.backgroundRepeat = "no-repeat";
+						screen.style.backgroundPosition = "center";
+						screen.style.backgroundSize = "200px";
+						this.resetGame();
+					} else {
+						var screen = document.getElementsByClassName("screen")[0];
+						var message = document.getElementsByClassName("message")[0];
+						screen.style.backgroundColor = "#FFA000";
+						screen.style.backgroundImage = "url(img/" + current.symbolPicture[6] + "_win.svg";
+						screen.style.backgroundRepeat = "no-repeat";
+						screen.style.backgroundPosition = "center";
+						screen.style.backgroundSize = "200px";
+						this.resetGame();
+					}
 				}
 			}
-			console.log(filled);
 			if (filled === 9) {
 				body.innerHTML = htmlSnippets.gameOver;
 				document.getElementsByClassName("message")[0].innerHTML = "It's a draw!";
