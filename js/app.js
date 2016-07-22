@@ -1,5 +1,5 @@
 
-var app = (function() {
+var app = (function(_) {
 	
 	// declare the available moves
 	var availableMoves = [["1", "2", "3"], ["1", "4", "7"], ["1", "5", "9"], 
@@ -15,8 +15,9 @@ var app = (function() {
 	["4", "5", "6"], ["7", "8", "9"], ["7", "5", "3"], ["2", "5", "8"], 
 	["3", "6", "9"]];
 	
+	// regex pattern used to check for clicked elements
 	var patt = /clicked/gi;
-	var lastIndex;
+
 	// declare variable to track the current player;
 	var current = playerOne;
 	
@@ -67,64 +68,102 @@ var app = (function() {
 	
 	return {
 		
+		// the loadStart function is responsible for loading the start screen
 		loadStart: function() {
+			// set the body's innerHTML equal to the html snippet start screen
 			body.innerHTML = htmlSnippets.startFile;
+			// store the buttons inside of variables and set up the event listeners
 			var twoPlayer = document.getElementsByClassName("button")[0];
 			var aiPlayer = document.getElementsByClassName("button")[1];
 			twoPlayer.addEventListener("click", app.twoPlayerStart, false);
 			aiPlayer.addEventListener("click", app.aiPlayerStart, false);
 		},
 		
+		// twoPlayerStart is responsible for starting a human vs human game
 		twoPlayerStart: function() {
+			// get the name containers of the players on the game board
 			var playerOneName = document.getElementsByClassName('name-1')[0];
 			var playerTwoName = document.getElementsByClassName('name-2')[0];
+			// check to make sure that the name field's are filled out 
 			if (playerOneName.value !== "" && playerTwoName.value !== "") {
+				// create the new player objects that will be used in the game
 				playerOne = new player(true, './img/x.svg', false, playerOneName.value);	
 				playerTwo = new player(true, './img/o.svg', false, playerTwoName.value);
+				// set the current player to player one
 				current = playerOne;
+				// render the board of the game 
 				app.renderBoard(playerOne.name, playerTwo.name);
 			} else {
+				// otherwise alert the player that they need to fill out the name fields 
 				alert("You must enter both player's names");
 			}
 		},
 		
+		// aiPlayerStart sets up a game in which a human plays the computer
 		aiPlayerStart: function() {
+			// set the name containers of the players on the game board 
 			var playerOneName = document.getElementsByClassName('name-1')[0];
 			var playerTwoName = document.getElementsByClassName('name-2')[0];
+			// since player two will always be called computer, i'm only looking to see if player one has filled out his/her name
 			if (playerOneName.value !== "") {
+				// create the new player objects
 				playerOne = new player(true, './img/x.svg', false, playerOneName.value);	
 				playerTwo = new player(true, './img/o.svg', true, "Computer");
+				// set the current player equal to player one
 				current = playerOne;
+				// render the board of the game
 				app.renderBoard(playerOne.name, playerTwo.name);
 			} else {
+				// otherwise alert the player that they need to fill out their name field
 				alert("You must enter player one's name");
 			}
 		},
 		
+		// renderBoard is responsible for creating the game board area
 		renderBoard: function(nameOne, nameTwo) {
+			// insert the stored body HTML into the current body element
 			body.innerHTML = bodyHtml;
+			// set the names of the players on the game board
 			document.getElementById('player-name-1').innerHTML = nameOne;
 			document.getElementById('player-name-2').innerHTML = nameTwo;
+			// set up all of the game board events
 			this.setBoardEvents();
 		},
 		
+		// setBoardEvents is responsible for creating all of the event handlers
 		setBoardEvents: function() {
 			
+			// function used to clear the background 
 			function clearBG() {
+				// if the object has not been clicked, set the background image equal to none
 				if (!this.className.match(/clicked/g)) {
 					this.style.backgroundImage = "none";
 				}
 			}
+			
+			// function used to set the background
 			function setBG() {
+				// if the object has not been clicked, set the background image equal to the current symbol picture
 				if (!this.className.match(/clicked/g)) {
-					this.style.backgroundImage = "url(" + current.symbolPicture;
+					console.log(current.symbolPicture);
+					console.log(this.style.backgroundImage);
+					this.style.backgroundImage = "url(" + current.symbolPicture + ")";
 				}
 			}
 			
+			// function used to add this to executeTurn
+			function exec() {
+				app.executeTurn(this);
+			}
+			
+			// iterate over the boxes
 			for (var i = 0; i < boxes.length; i++) {
-				boxes[i].addEventListener("mouseover", setBG, false);
-				boxes[i].addEventListener("mouseout", clearBG, false);
-				boxes[i].addEventListener("click", function() { app.executeTurn(this) }, false);
+				// on mouseover, setBG is called
+				_.addEventListener(boxes[i], "mouseover", setBG);
+				// on mouseout, clearBG is called
+				_.addEventListener(boxes[i], "mouseout", clearBG);
+				// on click, exec is called
+				boxes[i].addEventListener("click", exec, false);
 			}
 		},
 		
@@ -135,11 +174,13 @@ var app = (function() {
 					document.getElementById("player1").className = "players" + " " + "active";
 					document.getElementById("player2").className = "players";
 					element.className += " " + "box-filled-2" + " " + "clicked";
+					element.style.backgroundImage = "url(" + current.symbolPicture + ")";
 					this.popMove(element.id);
 				} else {
 					document.getElementById("player2").className = "players" + " " + "active";
 					document.getElementById("player1").className = "players";
 					element.className += " " + "box-filled-1" + " " + "clicked";
+					element.style.backgroundImage = "url(" + current.symbolPicture + ")";
 					this.popMove(element.id);
 				}
 				
@@ -178,10 +219,11 @@ var app = (function() {
 			var n = [];
 			var lowest = [1, 1, 1];
 			for (var j = 0; j < winningCombinationsOne.length; j++) {
-				if (winningCombinationsTwo[j].length === 1) {
-					return winningCombinationsTwo[j];
+				console.log(winningCombinationsTwo[j].length);
+				if (winningCombinationsTwo[j].length === 1 && availableMoves[j].length > 0) {
+					return availableMoves[j];
 				}
-				if (winningCombinationsOne[j].length < lowest.length && availableMoves[j].length > 0) {
+				if (winningCombinationsOne[j].length <= lowest.length && availableMoves[j].length > 0) {
 					for (var i = 0; i < winningCombinationsTwo[j].length; i++) {
 						if (winningCombinationsOne[j].length === 1) {
 							return availableMoves[j];
@@ -264,7 +306,6 @@ var app = (function() {
 		},
 		
 		resetGame: function() {
-			clearTimeout();
 			filled = 0;
 			current = playerOne;
 			moveLog = [];
@@ -280,5 +321,5 @@ var app = (function() {
 		}
 		
 	}
-}());
+}(Core));
 app.loadStart();
