@@ -334,7 +334,7 @@ var app = (function(_) {
 						var message = document.getElementsByClassName("message")[0];
 						// style the background color and image 
 						screen.style.backgroundColor = "#3688C3";
-						screen.style.backgroundImage = "url(img/" + current.symbolPicture[6] + "_win.svg" + ")";
+						screen.style.backgroundImage = "url('img/" + current.symbolPicture[6] + "_win.svg')";
 						screen.style.backgroundRepeat = "no-repeat";
 						screen.style.backgroundPosition = "center";
 						screen.style.backgroundSize = "200px";
@@ -345,7 +345,7 @@ var app = (function(_) {
 						var screen = document.getElementsByClassName("screen")[0];
 						var message = document.getElementsByClassName("message")[0];
 						screen.style.backgroundColor = "#FFA000";
-						screen.style.backgroundImage = "url(img/" + current.symbolPicture[6] + "_win.svg" + ")";
+						screen.style.backgroundImage = "url('img/" + current.symbolPicture[6] + "_win.svg')";
 						screen.style.backgroundRepeat = "no-repeat";
 						screen.style.backgroundPosition = "center";
 						screen.style.backgroundSize = "200px";
