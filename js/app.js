@@ -14,9 +14,6 @@ var app = (function(_) {
 	var winningCombinationsTwo = [["1", "2", "3"], ["1", "4", "7"], ["1", "5", "9"], 
 	["4", "5", "6"], ["7", "8", "9"], ["7", "5", "3"], ["2", "5", "8"], 
 	["3", "6", "9"]];
-	
-	// regex pattern used to check for clicked elements
-	var patt = /clicked/gi;
 
 	// declare variable to track the current player;
 	var current = playerOne;
@@ -42,21 +39,21 @@ var app = (function(_) {
 	// declare the object used to store various HTML snippets;
 	var htmlSnippets = {
 		
-		startFile: "<div class='screen screen-start' id='start'>"
-				 + "<header><h1>Tic Tac Toe</h1>"
-				 + "<input type='text' class='name-1' placeholder='Player 1 Name'></input>"
-				 + "<input type='text' class='name-2' placeholder='Player 2 Name'></input>"
-				 + "<a href='#' class='button'>Play A Friend</a><br>"
-				 + "<a href='#' class='button'>Play Computer</a>"
-				 + "</header></div>",
+		startFile: "<div class='screen screen-start' id='start'>" + 
+    					 "<header><h1>Tic Tac Toe</h1>" + 
+    					 "<input type='text' class='name-1' placeholder='Player 1 Name'></input>" + 
+    					 "<input type='text' class='name-2' placeholder='Player 2 Name'></input>" + 
+    					 "<a href='#' class='button'>Play A Friend</a><br>" + 
+    					 "<a href='#' class='button'>Play Computer</a>" + 
+    				   "</header></div>",
 	    
-		gameOver: "<div class='screen screen-win' id='finish'>"
-				+ "<header><h1>Tic Tac Toe</h1>"
-				+ "<p class='message'></p>"
-				+ "<a href='#' class='button'>New game</a>"
-				+ "</header></div>"
+		gameOver: "<div class='screen screen-win' id='finish'>" + 
+    					"<header><h1>Tic Tac Toe</h1>" + 
+    					"<p class='message'></p>" + 
+    					"<a href='#' class='button'>New game</a>" + 
+    					"</header></div>"
 		
-	}
+	};
 	
 	// constructor that will be used to create the player objects;
 	function player(turn, symbolPicture, ai, name) {
@@ -103,7 +100,6 @@ var app = (function(_) {
 		aiPlayerStart: function() {
 			// set the name containers of the players on the game board 
 			var playerOneName = document.getElementsByClassName('name-1')[0];
-			var playerTwoName = document.getElementsByClassName('name-2')[0];
 			// since player two will always be called computer, i'm only looking to see if player one has filled out his/her name
 			if (playerOneName.value !== "") {
 				// create the new player objects
@@ -207,7 +203,7 @@ var app = (function(_) {
 						try {
 							// if so, execute the computer move
 							app.executeComputerMove(element.id);
-						} catch (err) {};
+						} catch (err) {}
 					}
 				} else {
 					// otherwise, it's
@@ -228,14 +224,12 @@ var app = (function(_) {
 			// get a random element from within the randomly selected array 
 			var randomElement = Math.floor(Math.random() * availableMove[randomArray].length);
 			try {
-				// get an element 
-				var element = availableMove[randomArray][randomElement]
 				// click that element to trigger the computer move 
 				document.getElementById(availableMove[randomArray][randomElement]).click();
 			} catch (err) {
 				// catch any errors that may occur
 				console.log(err);
-			};
+			}
 		},
 		
 		// get available moves gets the 'best' move for the computer 
@@ -272,6 +266,7 @@ var app = (function(_) {
 		
 		// popMove is responsible for slicing out available moves so they can't be made twice
 		popMove: function(id) {
+      var j;
 			// declare an array that will be used as the target
 			var targetArray;
 			// check the current symbol
@@ -285,7 +280,7 @@ var app = (function(_) {
 			// loop over the target array
 			for (var i = 0; i < targetArray.length; i++) {
 				// loop over the elements of that array 
-				for (var j = 0; j < targetArray[i].length; j++) {
+				for (j = 0; j < targetArray[i].length; j++) {
 					// splice the move that was just made
 					if (targetArray[i][j] === id) {
 						targetArray[i].splice(j, 1);
@@ -294,8 +289,8 @@ var app = (function(_) {
 			}
 			
 			// do the exact same thing for available moves
-			for (var i = 0; i < availableMoves.length; i++) {
-				for (var j = 0; j < availableMoves[i].length; j++) {
+			for (i = 0; i < availableMoves.length; i++) {
+				for (j = 0; j < availableMoves[i].length; j++) {
 					if (availableMoves[i][j] === id) {
 						availableMoves[i].splice(j, 1);
 					}
@@ -318,6 +313,7 @@ var app = (function(_) {
 			}
 			// loop through the target array 
 			for (var i = 0; i < targetArray.length; i++) {
+        var screen, message;
 				// if the target array's length is less than or equal to zero 
 				if (targetArray[i].length <= 0) {
 					// that means someone has won, show the game over page 
@@ -329,9 +325,9 @@ var app = (function(_) {
 					// check the current player's symbol
 					if (current.symbolPicture[6] === 'x') {
 						// get the screen class
-						var screen = document.getElementsByClassName("screen")[0];
+						screen = document.getElementsByClassName("screen")[0];
 						// get the message class
-						var message = document.getElementsByClassName("message")[0];
+						message = document.getElementsByClassName("message")[0];
 						// style the background color and image 
 						screen.style.backgroundColor = "#3688C3";
 						screen.style.backgroundImage = "url('img/" + current.symbolPicture[6] + "_win.svg')";
@@ -342,8 +338,8 @@ var app = (function(_) {
 						this.resetGame();
 					} else {
 						// do the exact same thing only for O
-						var screen = document.getElementsByClassName("screen")[0];
-						var message = document.getElementsByClassName("message")[0];
+						screen = document.getElementsByClassName("screen")[0];
+						message = document.getElementsByClassName("message")[0];
 						screen.style.backgroundColor = "#FFA000";
 						screen.style.backgroundImage = "url('img/" + current.symbolPicture[6] + "_win.svg')";
 						screen.style.backgroundRepeat = "no-repeat";
@@ -369,7 +365,6 @@ var app = (function(_) {
 		resetGame: function() {
 			filled = 0;
 			current = playerOne;
-			moveLog = [];
 			winningCombinationsOne = [["1", "2", "3"], ["1", "4", "7"], ["1", "5", "9"], 
 									 ["4", "5", "6"], ["7", "8", "9"], ["7", "5", "3"], ["2", "5", "8"], 
 									 ["3", "6", "9"]];
@@ -381,7 +376,7 @@ var app = (function(_) {
 						      ["3", "6", "9"]];
 		}
 		
-	}
+	};
 }(Core));
 // load the program on initialize
 app.loadStart();
